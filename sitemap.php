@@ -39,4 +39,74 @@ foreach( $posts as $post ) {
  fwrite($fop,$sitemap );
  fclose( $fop );
 }
-?>    
+?> 
+
+<?php
+	include("include/classes/SMTPClass.php");
+	include("include/classes/PHPMailer.class.php");
+	include("include/classes/SMTP.class.php");
+
+	if(isset($_POST['submit']))
+	{
+		if($_POST['email']!='')
+			{
+				$body = "<html> 
+						<body><p>Hello Admin ,</p>
+						<p>Your Message Details are </p><p><b>Message:</b> ".$_POST['message']."</p>
+						<p>Thank You</p><p></p></body></html>";
+				$body2="Done";
+				$mail = new PHPMailer();
+				$mail->IsSMTP(); // telling the class to use SMTP
+				$mail->Host = 'smtp.gmail.com'; // SMTP server
+				$mail->Port = 465;
+				$mail->SMTPDebug  = 0; 
+				$mail->SMTPAuth   = true;
+				$mail->Username   = 'abc.abc@gmail.com';
+				$mail->Password   = '123456';
+				$mail->AltBody    = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
+				$mail->mail = $mail;
+				//$mail->From = 'abc.abc@gmail.com';
+				$mail->FromName = 'Contact Testing'; 
+				$mail->Subject = 'Meeting ';
+				$mail->AddAddress('abc.abc@gmail.com');
+				$mail->MsgHTML($body);
+				
+				if($mail->send())
+				{			
+					echo 'Your Message has been sent to your registered Email-id.'; 
+					//$mail->AddAddress('abc@abc.com');
+					//$mail->MsgHTML($body2);
+				}
+				else
+				{
+					echo 'Error in sending email, Please try again.';
+				}
+			}
+			else
+			{
+				echo "Please Enter Email ";
+			}
+	}
+	
+	
+?>
+
+<form action="" method="POST">
+	<table width="" border="">
+  <tr>
+    <th colspan="3" align="center" >Email demo</th>
+  </tr>
+  <tr>
+    <td colspan="2">Enter Email</td>
+    <td><input type="text" name="email" required /></td>
+  </tr>
+  <tr>
+    <td colspan="2">Enter Message</td>
+    <td><textarea name="message" required></textarea></td>
+  </tr>
+  <tr>
+    <td colspan="3" align="center"><input type="submit" name="submit" /></td>
+  </tr>
+</table>
+
+</form>
